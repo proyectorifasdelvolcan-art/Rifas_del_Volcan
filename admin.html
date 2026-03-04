@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Rifas</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root { --fondo: #f0f2f5; --blanco: #ffffff; --negro: #1a1c23; --dorado: #c5a028; --verde: #10b981; --rojo: #ef4444; --azul: #3b82f6; --gris-claro: #e5e7eb; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background-color: var(--fondo); color: #374151; }
+        
+        /* LOGIN PREMIUN */
+        #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, #1a1c23 0%, #2d3748 100%); color: white; }
+        .login-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 50px 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .login-box input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; font-size: 1rem; text-align: center; background: rgba(255,255,255,0.1); color: white; outline: none; transition: 0.3s; }
+        .login-box input::placeholder { color: rgba(255,255,255,0.5); }
+        .login-box input:focus { border-color: var(--dorado); background: rgba(255,255,255,0.15); }
+        .btn-login { background: var(--dorado); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(197, 160, 40, 0.3); }
+
+        /* PANEL GENERAL */
+        #admin-screen { display: none; padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: var(--blanco); padding: 20px 30px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        header h2 { margin: 0; color: var(--negro); font-weight: 900; }
+        
+        /* DASHBOARD METRICS (LA MAGIA PARA EL CLIENTE) */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background: var(--blanco); padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; align-items: center; gap: 20px; border-left: 5px solid; transition: transform 0.3s; }
+        .metric-card:hover { transform: translateY(-5px); }
+        .metric-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: white; }
+        .metric-info h4 { margin: 0; color: #6b7280; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-info h2 { margin: 5px 0 0 0; color: var(--negro); font-size: 2rem; font-weight: 900; }
+
+        /* PESTAÑAS (TABS) */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; background: var(--blanco); padding: 10px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .btn-tab { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; background: transparent; color: #6b7280; transition: 0.3s; font-size: 1rem; }
+        .btn-tab.activo { background: var(--negro); color: var(--dorado); }
+
+        .panel-controles { background: var(--blanco); padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;}
+        
+        /* TABLAS MODERNAS */
+        .tabla-contenedor { overflow-x: auto; width: 100%; background: var(--blanco); border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 10px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { padding: 18px 15px; text-align: left; border-bottom: 1px solid var(--gris-claro); }
+        th { color: #6b7280; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        tr:hover { background-color: #f9fafb; }
+
+        .checkbox-boleto { transform: scale(1.3); cursor: pointer; accent-color: var(--dorado); }
+        .btn-accion { padding: 12px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-accion:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-aprobar { background-color: var(--verde); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+        .btn-rechazar { background-color: var(--rojo); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+        .btn-excel { background-color: #107c41; color: white; padding: 12px 25px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(16, 124, 65, 0.3); transition: 0.2s; }
+        .btn-excel:hover { transform: translateY(-2px); }
+        
+        /* BOTONES INTELIGENTES DE WHATSAPP */
+        .btn-wa-smart { padding: 8px 15px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; border: none; cursor: pointer; }
+        .wa-cobrar { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .wa-cobrar:hover { background: #fef3c7; transform: scale(1.05); }
+        .wa-folio { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .wa-folio:hover { background: #d1fae5; transform: scale(1.05); }
+
+        .numero-destacado { font-weight: 900; color: var(--negro); font-size: 1.1rem; font-family: monospace; background: #f3f4f6; padding: 5px 10px; border-radius: 6px; }
+        .folio-etiqueta { background: #fef08a; color: #854d0e; padding: 6px 12px; border-radius: 8px; font-weight: 900; font-family: monospace; font-size: 1rem; border: 1px solid #fde047; }
+
+        .zona-peligro { background: #fef2f2; border: 2px dashed #f87171; padding: 25px; border-radius: 15px; margin-top: 40px; text-align: center; }
+
+        /* Ajustes para inputs de config */
+        .input-config { padding: 12px 15px; border-radius: 10px; border: 1px solid var(--gris-claro); outline: none; transition: 0.3s; font-family: 'Montserrat'; }
+        .input-config:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="margin-top: 0; color: var(--dorado);"><i class="fas fa-crown"></i> Panel Master</h2>
+            <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 25px;">Gestión de Rifas del Volcán</p>
+            <input type="email" id="input-email" placeholder="Correo del Administrador">
+            <input type="password" id="input-pass" placeholder="Contraseña de Acceso">
+            <button class="btn-login" onclick="iniciarSesion()">Ingresar al Sistema</button>
+        </div>
+    </div>
+
+    <div id="admin-screen">
+        <header>
+            <h2><i class="fas fa-chart-line" style="color: var(--dorado);"></i> Panel de Control <span style="font-weight: 400; color: #6b7280;">| Modo Administrador</span></h2>
+            <button onclick="cerrarSesion()" style="background:transparent; border:none; color:var(--rojo); cursor:pointer; font-weight:800; font-size: 0.95rem;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="metric-card" style="border-color: var(--azul);">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);"><i class="fas fa-ticket-alt"></i></div>
+                <div class="metric-info">
+                    <h4>Boletos Vendidos</h4>
+                    <h2 id="metric-vendidos">0</h2>
+                </div>
+            </div>
+            
+            <div class="metric-card" style="border-color: var(--dorado);">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #fbbf24, #d97706);"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="metric-info">
+                    <h4>Ingresos Estimados</h4>
+                    <h2 id="metric-ingresos">$0.00</h2>
+                </div>
+            </div>
+
+            <div class="metric-card" style="border-color: var(--rojo);">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-clock"></i></div>
+                <div class="metric-info">
+                    <h4>Pagos Pendientes</h4>
+                    <h2 id="metric-pendientes">0</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-controles" style="background: #eff6ff; border-left: 5px solid #3b82f6; margin-bottom: 25px;">
+            <div style="flex: 1; min-width: 250px;">
+                <h3 style="margin:0 0 5px 0; color: #1e3a8a;"><i class="fas fa-cog"></i> Configuración Pública</h3>
+                <p style="margin:0; font-size:0.85rem; color:#475569;">Actualiza la fecha y foto del premio en tiempo real.</p>
+            </div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; flex: 2; align-items: center;">
+                <input type="text" id="input-fecha" class="input-config" placeholder="Ej. 20 de Mayo, 2026" style="flex: 1; min-width: 150px; font-weight: bold;">
+                <input type="text" id="input-imagen" class="input-config" placeholder="URL de la imagen del premio..." style="flex: 2; min-width: 200px;">
+                <button class="btn-accion" style="background-color: #2563eb;" onclick="guardarConfiguracion()"><i class="fas fa-cloud-upload-alt"></i> Publicar</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="btn-tab activo" id="tab-pendientes" onclick="cambiarPestana('pendientes')"><i class="fas fa-hourglass-half"></i> Por Aprobar</button>
+            <button class="btn-tab" id="tab-vendidos" onclick="cambiarPestana('vendidos')"><i class="fas fa-check-circle"></i> Lista Oficial (Vendidos)</button>
+        </div>
+
+        <div id="seccion-pendientes">
+            <div class="panel-controles">
+                <div>
+                    <h3 style="margin: 0 0 5px 0;">Auditoría de Pagos</h3>
+                    <p style="margin:0; font-size:0.9rem; color:#6b7280;">Selecciona los números que ya depositaron y dales Aprobar.</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn-accion btn-aprobar" onclick="procesarSeleccionados('aprobar')"><i class="fas fa-check-double"></i> Aprobar Seleccionados</button>
+                    <button class="btn-accion btn-rechazar" onclick="procesarSeleccionados('liberar')"><i class="fas fa-trash-alt"></i> Liberar (No Pagó)</button>
+                </div>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"><input type="checkbox" id="check-todos" class="checkbox-boleto" onclick="seleccionarTodos()"></th>
+                            <th>Nº Boleto</th>
+                            <th>Cliente</th>
+                            <th>Acción Rápida (WhatsApp)</th>
+                            <th>Fecha de Apartado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body-pendientes">
+                        <tr><td colspan="5" style="text-align: center;">Cargando sistema...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="seccion-vendidos" style="display: none;">
+            <div class="panel-controles">
+                <div>
+                    <h3 style="margin: 0 0 5px 0;">Base de Datos Oficial</h3>
+                    <p style="margin:0; font-size:0.9rem; color:#6b7280;">Todos los boletos asegurados en el sistema.</p>
+                </div>
+                <button class="btn-excel" onclick="descargarExcel()"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Boleto</th>
+                            <th>Folio Emitido</th>
+                            <th>Propietario</th>
+                            <th>Atención a Cliente (WhatsApp)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body-vendidos">
+                        <tr><td colspan="4" style="text-align: center;">Cargando sistema...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="zona-peligro">
+                <h3 style="color: #ef4444; margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> ZONA DE PELIGRO</h3>
+                <p style="color: #7f1d1d; font-size: 0.95rem; font-weight: 600;">Esta acción es irreversible. Solo úsala cuando la rifa termine y hayas entregado los premios.</p>
+                <button class="btn-accion btn-rechazar" style="margin: 15px auto 0 auto;" onclick="reiniciarRifa()"><i class="fas fa-radiation"></i> FORMATEAR SISTEMA Y NUEVA RIFA</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var SUPABASE_URL = 'https://qcsfarqacgsqaddflfzb.supabase.co'; 
+        var SUPABASE_KEY = 'sb_publishable_Jwxr_1dKydjOgFedjvm50A_oHdLAwil'; 
+        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        var dataVendidos = []; 
+        var PRECIO_BOLETO = 1; // Precio configurado para el Dashboard Financiero
+
+        async function iniciarSesion() {
+            var email = document.getElementById('input-email').value;
+            var pass = document.getElementById('input-pass').value;
+            if (!email || !pass) return Swal.fire('Error', 'Llena ambos campos.', 'warning');
+
+            Swal.fire({ title: 'Autenticando...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+            var { error } = await supabase.auth.signInWithPassword({ email: email, password: pass });
+
+            if (error) {
+                Swal.fire('Denegado', 'Credenciales incorrectas.', 'error');
+            } else {
+                Swal.close();
+                mostrarPanel();
+            }
+        }
+
+        async function cerrarSesion() {
+            await supabase.auth.signOut();
+            window.location.reload();
+        }
+
+        window.onload = async function() {
+            var { data: { session } } = await supabase.auth.getSession();
+            if (session) mostrarPanel();
+        }
+
+        function mostrarPanel() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-screen').style.display = 'block';
+            cargarPendientes();
+            cargarVendidosOcultosParaDashboard(); // Carga las métricas de vendidos en el fondo
+            obtenerConfiguracion(); 
+        }
+
+        // --- FUNCIONES INTELIGENTES WHATSAPP ---
+        function abrirWACobro(tel, boleto, nombre) {
+            if(!tel) return Swal.fire('Error', 'El cliente no registró número', 'info');
+            var msg = `¡Hola ${nombre || ''}! ⏳ Te recordamos que tienes el número *${boleto}* apartado para Rifas del Volcán. Recuerda enviarnos tu comprobante de pago antes de que expire el tiempo para no perderlo. ¡Quedamos pendientes! 🌋`;
+            window.open(`https://wa.me/52${tel}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function abrirWAFolio(tel, folio, boleto, nombre) {
+            if(!tel) return Swal.fire('Error', 'El cliente no registró número', 'info');
+            var msg = `¡Felicidades ${nombre || ''}! 🎉 Confirmamos tu pago exitosamente.\n\n🎟️ Boleto: *${boleto}*\n✅ Folio Oficial: *${folio}*\n\nCon este folio participas legalmente en el sorteo. ¡Mucha suerte y gracias por confiar en Rifas del Volcán! 🌋`;
+            window.open(`https://wa.me/52${tel}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // --- CONFIGURACIÓN ---
+        async function obtenerConfiguracion() {
+            try {
+                var { data } = await supabase.from('configuracion').select('fecha, imagen').eq('id', 1).single();
+                if (data) {
+                    document.getElementById('input-fecha').value = data.fecha || '';
+                    document.getElementById('input-imagen').value = data.imagen || '';
+                }
+            } catch(e) { console.log(e); }
+        }
+
+        async function guardarConfiguracion() {
+            var nuevaFecha = document.getElementById('input-fecha').value.trim();
+            var nuevaImagen = document.getElementById('input-imagen').value.trim();
+            if (!nuevaFecha) return Swal.fire('Aviso', 'La fecha no puede estar vacía.', 'warning');
+            
+            Swal.showLoading();
+            try {
+                var { error } = await supabase.from('configuracion').update({ fecha: nuevaFecha, imagen: nuevaImagen }).eq('id', 1);
+                if (error) throw error;
+                Swal.fire('¡Publicado!', 'La página de inicio ha sido actualizada.', 'success');
+            } catch(e) { Swal.fire('Error', 'No se pudo guardar.', 'error'); }
+        }
+
+        function cambiarPestana(pestana) {
+            document.getElementById('tab-pendientes').classList.remove('activo');
+            document.getElementById('tab-vendidos').classList.remove('activo');
+            document.getElementById('seccion-pendientes').style.display = 'none';
+            document.getElementById('seccion-vendidos').style.display = 'none';
+
+            if (pestana === 'pendientes') {
+                document.getElementById('tab-pendientes').classList.add('activo');
+                document.getElementById('seccion-pendientes').style.display = 'block';
+                cargarPendientes();
+            } else {
+                document.getElementById('tab-vendidos').classList.add('activo');
+                document.getElementById('seccion-vendidos').style.display = 'block';
+                cargarVendidos();
+            }
+        }
+
+        // --- CARGA Y MÉTRICAS PENDIENTES ---
+        async function cargarPendientes() {
+            var tbody = document.getElementById('tabla-body-pendientes');
+            try {
+                var { data } = await supabase.from('boletos').select('*').eq('estado', 'apartado').order('created_at', { ascending: false });
+                
+                // Actualizar Dashboard
+                document.getElementById('metric-pendientes').innerText = data ? data.length : 0;
+
+                if (!data || data.length === 0) return tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 30px; color:#9ca3af;"><i class="fas fa-check-circle" style="font-size:2rem; margin-bottom:10px; display:block;"></i>Todo al día. No hay pagos pendientes.</td></tr>';
+                
+                var html = '';
+                data.forEach(function(b) {
+                    var numFormateado = ("000000" + b.numero_boleto).slice(-6);
+                    var nombre = b.comprador_nombre || 'Sin Nombre';
+                    var telValido = b.comprador_telefono ? b.comprador_telefono : '';
+                    
+                    var btnCobrar = telValido ? 
+                        `<button class="btn-wa-smart wa-cobrar" onclick="abrirWACobro('${telValido}', '${numFormateado}', '${nombre}')"><i class="fab fa-whatsapp"></i> Mandar Cobro</button>` 
+                        : `<span style="color:#9ca3af; font-size:0.8rem;">Sin teléfono</span>`;
+
+                    var fecha = new Date(b.created_at).toLocaleString('es-MX', {day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit'});
+
+                    html += `<tr>
+                        <td><input type="checkbox" class="checkbox-boleto check-item" value="${b.numero_boleto}"></td>
+                        <td><span class="numero-destacado">${numFormateado}</span></td>
+                        <td style="font-weight:600;">${nombre}</td>
+                        <td>${btnCobrar}</td>
+                        <td style="font-size:0.85rem; color:#6b7280;">${fecha}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch(e) { tbody.innerHTML = '<tr><td colspan="5">Error de conexión.</td></tr>'; }
+        }
+
+        // --- CARGA Y MÉTRICAS VENDIDOS ---
+        async function cargarVendidosOcultosParaDashboard() {
+            try {
+                var { data } = await supabase.from('boletos').select('numero_boleto').eq('estado', 'vendido');
+                var cantidad = data ? data.length : 0;
+                var totalDinero = cantidad * PRECIO_BOLETO;
+                
+                document.getElementById('metric-vendidos').innerText = cantidad;
+                // Formatear dinero con comas y signo
+                document.getElementById('metric-ingresos').innerText = "$" + totalDinero.toLocaleString('es-MX') + ".00";
+            } catch(e) {}
+        }
+
+        async function cargarVendidos() {
+            var tbody = document.getElementById('tabla-body-vendidos');
+            try {
+                var { data } = await supabase.from('boletos').select('*').eq('estado', 'vendido').order('numero_boleto', { ascending: true });
+                dataVendidos = data || []; 
+
+                // Actualizar Dashboard
+                var totalDinero = dataVendidos.length * PRECIO_BOLETO;
+                document.getElementById('metric-vendidos').innerText = dataVendidos.length;
+                document.getElementById('metric-ingresos').innerText = "$" + totalDinero.toLocaleString('es-MX') + ".00";
+
+                if (dataVendidos.length === 0) return tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 30px; color:#9ca3af;">Aún no hay boletos oficialmente vendidos.</td></tr>';
+                
+                var html = '';
+                dataVendidos.forEach(function(b) {
+                    var numFormateado = ("000000" + b.numero_boleto).slice(-6);
+                    var nombre = b.comprador_nombre || 'Sin Nombre';
+                    var folio = b.folio || 'SIN-FOLIO';
+                    var telValido = b.comprador_telefono ? b.comprador_telefono : '';
+
+                    var btnFolio = telValido ? 
+                        `<button class="btn-wa-smart wa-folio" onclick="abrirWAFolio('${telValido}', '${folio}', '${numFormateado}', '${nombre}')"><i class="fab fa-whatsapp"></i> Enviar Folio</button>` 
+                        : `<span style="color:#9ca3af; font-size:0.8rem;">Sin teléfono</span>`;
+
+                    html += `<tr>
+                        <td><span class="numero-destacado">${numFormateado}</span></td>
+                        <td><span class="folio-etiqueta">${folio}</span></td>
+                        <td style="font-weight:600;">${nombre}</td>
+                        <td>${btnFolio}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch(e) { tbody.innerHTML = '<tr><td colspan="4">Error de conexión.</td></tr>'; }
+        }
+
+        function seleccionarTodos() {
+            var maestro = document.getElementById('check-todos');
+            document.querySelectorAll('.check-item').forEach(cb => cb.checked = maestro.checked);
+        }
+
+        function generarFolio() {
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var res = 'VOL-';
+            for (var i = 0; i < 6; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        async function procesarSeleccionados(accion) {
+            var seleccionados = Array.from(document.querySelectorAll('.check-item:checked')).map(cb => parseInt(cb.value));
+            if (seleccionados.length === 0) return Swal.fire('Aviso', 'Selecciona al menos un boleto de la lista.', 'warning');
+
+            var texto = accion === 'aprobar' ? '¿Confirmas que el dinero ya está en tu cuenta?' : '¿Liberar estos boletos para que otros los compren?';
+            var result = await Swal.fire({ title: '¿Estás seguro?', text: texto, icon: 'warning', showCancelButton: true, confirmButtonColor: accion === 'aprobar' ? '#10b981' : '#ef4444' });
+
+            if (result.isConfirmed) {
+                Swal.showLoading();
+                try {
+                    if (accion === 'aprobar') {
+                        var folioOficial = generarFolio();
+                        var { error } = await supabase.from('boletos').update({ estado: 'vendido', folio: folioOficial }).in('numero_boleto', seleccionados);
+                        if (error) throw error;
+                        
+                        Swal.fire({ icon: 'success', title: '¡Pagos Aprobados!', html: `Folio de respaldo generado:<br><h3 style="color:var(--dorado); letter-spacing: 2px;">${folioOficial}</h3>` });
+                    } else {
+                        var { error } = await supabase.from('boletos').delete().in('numero_boleto', seleccionados);
+                        if (error) throw error;
+                        Swal.fire('Liberados', 'Los boletos han vuelto al catálogo público.', 'success');
+                    }
+                    document.getElementById('check-todos').checked = false;
+                    cargarPendientes();
+                    cargarVendidosOcultosParaDashboard(); // Actualizar finanzas
+                } catch (e) { Swal.fire('Error', 'La base de datos bloqueó la acción.', 'error'); }
+            }
+        }
+
+        function descargarExcel() {
+            if (dataVendidos.length === 0) return Swal.fire('Aviso', 'No hay registros para descargar.', 'info');
+            var csv = "Numero_Boleto,Folio,Comprador,Telefono\n";
+            dataVendidos.forEach(function(b) {
+                var numFormateado = ("000000" + b.numero_boleto).slice(-6);
+                var nombre = (b.comprador_nombre || "").replace(/,/g, " "); 
+                var tel = b.comprador_telefono || "";
+                var folio = b.folio || "";
+                csv += `${numFormateado},${folio},${nombre},${tel}\n`;
+            });
+            var blob = new Blob(["\ufeff", csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var enlace = document.createElement("a");
+            enlace.href = url;
+            enlace.download = "Lista_Participantes_Volcan.csv";
+            document.body.appendChild(enlace);
+            enlace.click();
+            document.body.removeChild(enlace);
+        }
+
+        async function reiniciarRifa() {
+            var result = await Swal.fire({
+                title: 'PELIGRO INMINENTE',
+                text: 'Vas a purgar toda la base de datos. Para continuar, escribe la palabra FORMATEAR:',
+                input: 'text',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Ejecutar Formateo',
+                cancelButtonText: 'Cancelar Acción',
+                inputValidator: (value) => {
+                    if (value !== 'FORMATEAR') return 'Escribe FORMATEAR en mayúsculas para confirmar.'
+                }
+            });
+
+            if (result.isConfirmed && result.value === 'FORMATEAR') {
+                Swal.showLoading();
+                try {
+                    var { error } = await supabase.from('boletos').delete().gt('numero_boleto', 0);
+                    if (error) throw error;
+                    
+                    Swal.fire('¡Sistema Limpio!', 'La base de datos está lista para un nuevo sorteo.', 'success');
+                    dataVendidos = [];
+                    cargarVendidos();
+                    cargarPendientes();
+                } catch(e) { Swal.fire('Error', 'No se pudo formatear el sistema.', 'error'); }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rifas del Volcán | Inicio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root { --fondo: #f9f9f9; --blanco: #ffffff; --negro-suave: #1a1a1a; --dorado-solido: #c5a028; --dorado-brillo: linear-gradient(45deg, #d4af37, #f1d78a, #d4af37); --verde-whatsapp: #25d366; --azul-facebook: #1877F2; --gris-claro: #ddd; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; background-color: var(--fondo); color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { background-color: var(--negro-suave); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid #333; }
+        .logo { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; background: var(--dorado-brillo); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
+        
+        .btn-nav { background: transparent; border: 2px solid var(--dorado-solido); padding: 8px 15px; border-radius: 20px; font-weight: 700; color: var(--dorado-solido); cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+        .btn-nav:hover { background: var(--dorado-solido); color: var(--negro-suave); }
+
+        /* PORTADA MEJORADA (HERO DARK) */
+        .hero { text-align: center; padding: 50px 20px 60px 20px; background: linear-gradient(135deg, #111 0%, #222 100%); color: white; border-bottom: 5px solid var(--dorado-solido); position: relative; overflow: hidden; }
+        .hero::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); opacity: 0.1; pointer-events: none; }
+        .hero h1 { font-size: 3.5rem; margin: 0; line-height: 1.1; text-transform: uppercase; position: relative; z-index: 1; }
+        .fecha-tag { background-color: rgba(197, 160, 40, 0.15); color: #f1d78a; border: 1px solid var(--dorado-solido); padding: 8px 20px; border-radius: 50px; font-weight: 700; display: inline-block; margin-top: 15px; font-size: 0.95rem; position: relative; z-index: 1; }
+        
+        .foto-premio { width: 90%; max-width: 550px; height: 280px; margin: 30px auto; border: 4px solid var(--dorado-solido); border-radius: 20px; object-fit: cover; box-shadow: 0 15px 35px rgba(0,0,0,0.5); background-color: #333; display: block; position: relative; z-index: 1; transition: transform 0.3s; }
+        .foto-premio:hover { transform: scale(1.02); }
+        
+        .precio-pill { background: var(--dorado-brillo); color: var(--negro-suave); padding: 15px 40px; border-radius: 50px; font-weight: 900; font-size: 1.3rem; display: inline-block; box-shadow: 0 8px 25px rgba(197, 160, 40, 0.4); position: relative; z-index: 1; text-transform: uppercase; letter-spacing: 1px; }
+
+        .btn-facebook { background-color: var(--azul-facebook); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; margin-top: 25px; box-shadow: 0 5px 15px rgba(24, 119, 242, 0.3); transition: transform 0.3s; position: relative; z-index: 1; }
+        .btn-facebook:hover { transform: translateY(-3px); }
+
+        /* CINTILLO DE CONFIANZA */
+        .trust-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 25px 5%; background: var(--blanco); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-bottom: 1px solid #eee; margin-bottom: 30px; }
+        .badge { display: flex; align-items: center; gap: 10px; color: #555; font-weight: 700; font-size: 0.95rem; }
+        .badge i { font-size: 1.5rem; color: var(--dorado-solido); }
+
+        .area-compra { padding: 10px 3%; text-align: center; flex: 1; }
+        
+        .random-panel { background: white; border: 1px solid #eee; border-radius: 20px; padding: 25px; max-width: 500px; margin: 0 auto 30px auto; box-shadow: 0 8px 25px rgba(0,0,0,0.04); }
+        .random-controls { display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 15px; flex-wrap: wrap; }
+        .input-cantidad { padding: 12px; border: 2px solid #eee; border-radius: 12px; width: 120px; text-align: center; font-weight: 700; font-size: 1rem; outline: none; transition: 0.3s; }
+        .input-cantidad:focus { border-color: var(--dorado-solido); }
+        .btn-suerte { background: var(--dorado-brillo); border: none; color: var(--negro-suave); padding: 12px 25px; border-radius: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: transform 0.2s; }
+        .btn-suerte:hover { transform: translateY(-2px); }
+
+        .paginacion { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; align-items: center;}
+        .btn-paginacion { background: var(--blanco); border: 2px solid var(--dorado-solido); color: var(--dorado-solido); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn-paginacion:hover:not(:disabled) { background: var(--dorado-solido); color: white; }
+        .btn-paginacion:disabled { border-color: #ddd; color: #bbb; cursor: not-allowed; }
+        
+        .grid-boletos { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; max-width: 950px; margin: 0 auto 60px auto; min-height: 300px; width: 100%; }
+        .boleto { background: var(--blanco); border: 2px solid var(--gris-claro); padding: 15px 0; font-weight: 700; color: #555; border-radius: 10px; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); user-select: none; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .boleto:hover:not(.ocupado) { border-color: var(--dorado-solido); color: var(--dorado-solido); transform: translateY(-2px); }
+        .boleto.seleccionado { background: var(--dorado-brillo); color: var(--negro-suave); border-color: transparent; font-weight: 900; transform: scale(1.08); box-shadow: 0 5px 15px rgba(197, 160, 40, 0.3); }
+        .boleto.ocupado { background-color: #e0e0e0; color: #a0a0a0; border-color: #e0e0e0; cursor: not-allowed; text-decoration: line-through; opacity: 0.7; pointer-events: none; }
+
+        /* SECCIÓN FAQ (PREGUNTAS FRECUENTES) */
+        .faq-section { max-width: 700px; margin: 0 auto 60px auto; text-align: left; padding: 0 20px; }
+        .faq-section h2 { text-align: center; font-size: 2rem; margin-bottom: 30px; color: var(--negro-suave); }
+        .faq-item { margin-bottom: 15px; border: 1px solid #eee; border-radius: 12px; background: white; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .faq-btn { width: 100%; text-align: left; padding: 20px; background: none; border: none; font-weight: 700; font-size: 1rem; color: #333; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; font-family: 'Montserrat', sans-serif; }
+        .faq-btn:hover { color: var(--dorado-solido); }
+        .faq-btn i { transition: transform 0.3s; color: var(--dorado-solido); }
+        .faq-btn.activo i { transform: rotate(180deg); }
+        .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #fafafa; }
+        .faq-content p { padding: 0 20px 20px 20px; margin: 0; color: #666; font-size: 0.95rem; line-height: 1.6; }
+
+        .panel-pago { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--negro-suave); border-top: 3px solid var(--dorado-solido); padding: 20px; z-index: 2000; box-shadow: 0 -10px 30px rgba(0,0,0,0.2); display: flex; justify-content: center; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .panel-pago.activo { transform: translateY(0); }
+        .btn-ir-pagar { background: var(--dorado-brillo); color: var(--negro-suave); padding: 15px 30px; border-radius: 50px; font-weight: 900; font-size: 1.1rem; border: none; cursor: pointer; width: 100%; max-width: 450px; box-shadow: 0 5px 20px rgba(197, 160, 40, 0.4); text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s; }
+        .btn-ir-pagar:hover { transform: scale(1.02); }
+
+        footer { background-color: #111; color: #888; padding: 50px 20px; text-align: center; font-size: 0.85rem; margin-top: auto; border-top: 5px solid var(--dorado-solido); padding-bottom: 120px; }
+        .footer-links { margin: 20px 0; }
+        .footer-links a { color: #ccc; text-decoration: none; transition: color 0.3s; cursor: pointer; font-weight: 600; }
+        .footer-links a:hover { color: var(--dorado-solido); }
+        .separador { margin: 0 15px; color: #444; }
+        .creditos { margin-top: 30px; font-size: 0.8rem; opacity: 0.6; letter-spacing: 0.5px; }
+        .link-creador { color: var(--dorado-solido); text-decoration: none; font-weight: 900; transition: all 0.3s ease; }
+        .link-creador:hover { text-decoration: underline; opacity: 1; color: #fff; }
+
+        /* BURBUJA DE WHATSAPP */
+        .whatsapp-flotante { position: fixed; bottom: 25px; right: 25px; z-index: 3000; display: flex; flex-direction: column; align-items: flex-end; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .wa-mensaje { background: white; color: var(--negro-suave); padding: 12px 15px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 15px; position: relative; opacity: 1; transition: opacity 0.5s ease, transform 0.5s ease; border: 1px solid #eee; border-left: 4px solid var(--verde-whatsapp); display: flex; align-items: center; gap: 10px; }
+        .wa-mensaje.oculto { opacity: 0; transform: translateY(20px); pointer-events: none; }
+        .btn-cerrar-wa { background: transparent; border: none; color: #999; cursor: pointer; font-size: 1.1rem; padding: 0; transition: 0.3s; }
+        .btn-cerrar-wa:hover { color: #333; transform: scale(1.1); }
+        .wa-boton { background-color: var(--verde-whatsapp); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 38px; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); text-decoration: none; transition: transform 0.3s; border: 2px solid white; }
+        .wa-boton:hover { transform: scale(1.1); color: white; }
+
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(5px); }
+        .modal-overlay.activo { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--blanco); width: 90%; max-width: 800px; max-height: 85vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 15px 50px rgba(0,0,0,0.5); transform: translateY(-30px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-top: 6px solid var(--dorado-solido); }
+        .modal-overlay.activo .modal-content { transform: translateY(0); }
+        .modal-header { padding: 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; border-radius: 20px 20px 0 0; }
+        .modal-header h2 { margin: 0; font-size: 1.4rem; color: var(--negro-suave); font-weight: 900; }
+        .btn-cerrar-modal { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; color: #555; transition: 0.3s; display: flex; justify-content: center; align-items: center; }
+        .btn-cerrar-modal:hover { background: #e74c3c; color: white; }
+        .modal-body { padding: 30px; overflow-y: auto; font-size: 0.95rem; line-height: 1.8; color: #444; text-align: justify; }
+        .modal-body h3 { color: var(--dorado-solido); margin-top: 25px; margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; }
+        .tech-note-modal { background: #f0f4f8; border-left: 5px solid #607d8b; padding: 20px; margin: 25px 0; border-radius: 8px; font-size: 0.9rem; }
+
+        @media (max-width: 600px) { 
+            .hero h1 { font-size: 2.5rem; }
+            .grid-boletos { grid-template-columns: repeat(4, 1fr); gap: 8px; } 
+            .whatsapp-flotante { bottom: 15px; right: 15px; } 
+            .wa-boton { width: 55px; height: 55px; font-size: 30px; } 
+            .modal-content { max-height: 90vh; width: 95%; }
+            .trust-badges { gap: 15px; padding: 20px; }
+            .badge { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">RIFAS VOLCÁN</div>
+        <button class="btn-nav" onclick="verificarBoleto()"><i class="fas fa-search"></i> Verificar Boleto</button>
+    </header>
+
+    <section class="hero">
+        <h1>PREMIOS <br> <span style="color:var(--dorado-solido)">EXPLOSIVOS</span></h1>
+        
+        <div class="fecha-tag" id="fecha-sorteo-display"><i class="far fa-calendar-alt"></i> Sorteo: Cargando...</div><br>
+        
+        <p style="margin-top: 20px; color: #ccc; font-size: 1.1rem;">Participa por el gran premio del año.</p>
+        
+        <img id="img-premio-display" class="foto-premio" src="https://via.placeholder.com/500x250?text=Cargando+Imagen..." alt="Premio de la Rifa">
+        
+        <div class="precio-pill">$1.00 MXN x Boleto</div><br>
+
+        <a href="https://www.facebook.com/profile.php?id=61588554851135" target="_blank" class="btn-facebook">
+            <i class="fab fa-facebook-f"></i> Sigue la Rifa en VIVO
+        </a>
+    </section>
+
+    <div class="trust-badges">
+        <div class="badge"><i class="fas fa-shield-alt"></i> Compra 100% Segura</div>
+        <div class="badge"><i class="fas fa-award"></i> Sorteo Transparente</div>
+        <div class="badge"><i class="fas fa-headset"></i> Soporte Directo</div>
+    </div>
+
+    <section class="area-compra">
+        
+        <div class="random-panel">
+            <h3 style="margin:0; font-size:1.2rem; color: var(--negro-suave);">¿Buscas un número en especial?</h3>
+            <div class="random-controls" style="border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 20px;">
+                <input type="number" id="buscar-numero" placeholder="Ej. 85000" class="input-cantidad" style="width: 140px;">
+                <button class="btn-suerte" style="background: var(--negro-suave); color: white;" onclick="irAlBoleto()"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+            
+            <h3 style="margin:0; font-size:1.1rem; color:#666;">O deja que la suerte decida:</h3>
+            <div class="random-controls">
+                <input type="number" id="cantidad-azar" value="1" min="1" max="50" class="input-cantidad">
+                <button class="btn-suerte" onclick="seleccionarAlAzar()"><i class="fas fa-magic"></i> Elegir al Azar</button>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.5rem; margin-bottom: 5px;">Selecciona tus números</h3>
+        <p style="color: #888; font-size: 0.95rem; margin-bottom: 25px;">Los boletos grises ya están vendidos o apartados.</p>
+        
+        <div class="paginacion">
+            <button class="btn-paginacion" id="btn-ant-full" onclick="cambiarPaginaExtrema(-1)"><i class="fas fa-angle-double-left"></i> Inicio</button>
+            <button class="btn-paginacion" id="btn-ant" onclick="cambiarPagina(-1)">Anterior</button>
+            <span id="texto-pagina" style="margin: 0 15px; font-weight: 900; color: var(--negro-suave);">Página 1</span>
+            <button class="btn-paginacion" id="btn-sig" onclick="cambiarPagina(1)">Siguiente</button>
+            <button class="btn-paginacion" id="btn-sig-full" onclick="cambiarPaginaExtrema(1)">Final <i class="fas fa-angle-double-right"></i></button>
+        </div>
+
+        <div class="grid-boletos" id="contenedor-boletos"></div>
+    </section>
+
+    <section class="faq-section">
+        <h2>Preguntas Frecuentes</h2>
+        
+        <div class="faq-item">
+            <button class="faq-btn" onclick="toggleFaq(this)">¿Cómo se elige a los ganadores? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-content">
+                <p>Todos nuestros sorteos se realizan con base en los resultados oficiales de la Lotería Nacional de México. El número ganador será aquel que coincida con las últimas cifras del Premio Mayor del sorteo en la fecha indicada.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-btn" onclick="toggleFaq(this)">¿Qué pasa si gano? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-content">
+                <p>Si tu boleto resulta ganador, nos comunicaremos contigo inmediatamente al número de WhatsApp que registraste. Es obligatorio presentar tu Folio Oficial y una Identificación Oficial (INE) que coincida con el nombre registrado.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-btn" onclick="toggleFaq(this)">¿Cuánto tiempo tengo para pagar? <i class="fas fa-chevron-down"></i></button>
+            <div class="faq-content">
+                <p>Una vez que seleccionas tus boletos y haces el apartado en la página, cuentas con exactamente <strong>24 horas</strong> para realizar el pago y enviar tu comprobante. Si no lo recibimos, el sistema liberará tus boletos automáticamente.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="whatsapp-flotante" id="whatsapp-flotante">
+        <div class="wa-mensaje" id="wa-mensaje">
+            <span>Si tienes dudas, comunícate con nosotros</span>
+            <button class="btn-cerrar-wa" onclick="cerrarMensajeWA()" title="Cerrar mensaje"><i class="fas fa-times"></i></button>
+        </div>
+        <a href="https://wa.me/522216324043" target="_blank" class="wa-boton" title="Escríbenos por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <div class="panel-pago" id="barra-pago">
+        <button class="btn-ir-pagar" id="btnPagar" onclick="irAPagar()">Apartar y Pagar $<span id="total">0</span></button>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Rifas del Volcán. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a onclick="abrirModal('modal-terminos')">Términos y Condiciones</a>
+            <span class="separador">|</span>
+            <a onclick="abrirModal('modal-privacidad')">Aviso de Privacidad</a>
+        </div>
+        <div class="creditos">
+            Creado y Diseñado por <a href="TU_ENLACE_DE_INSTAGRAM_AQUI" target="_blank" class="link-creador">Antuan Lima</a>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modal-terminos">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Términos y Condiciones</h2>
+                <button class="btn-cerrar-modal" onclick="cerrarModal('modal-terminos')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Este documento rige la relación entre los participantes y el comité organizador de <strong>Rifas del Volcán</strong>.</p>
+                <h3>1. Descripción de la Dinámica</h3>
+                <p>Los sorteos realizados a través de este portal son organizados por iniciativa privada y tienen como base los resultados oficiales de la <strong>Lotería Nacional de México</strong>.</p>
+                <h3>2. Valor y Modalidad de Pago</h3>
+                <p>Cada boleto tiene un costo de <strong>$1.00 MXN</strong>. El pago se realiza mediante transferencia bancaria o depósito a las cuentas oficiales mostradas al finalizar el apartado.</p>
+                <h3>3. Regla Estricta de Apartado (24 Horas)</h3>
+                <p>El sistema otorga un periodo de reserva de <strong>24 horas exactas</strong>. Si el comprobante de pago no es enviado vía WhatsApp en este lapso, los números se liberarán.</p>
+                <h3>4. Validación de Folios</h3>
+                <p>Un boleto es oficialmente válido solo cuando el administrador verifica el pago y el sistema genera un <strong>Folio Oficial de Verificación</strong>.</p>
+                <h3>5. Reclamación de Premios</h3>
+                <p>Para reclamar el premio se requiere: 1) Folio Oficial verificado, 2) Identificación oficial (INE). El nombre registrado debe coincidir al 100% con la identificación.</p>
+                <div class="tech-note-modal">
+                    <strong>Deslinde de Responsabilidad Técnica:</strong> Antuan Lima funge estrictamente como desarrollador tecnológico y no tiene participación en el manejo de tesorería, sorteo ni entrega de premios.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-privacidad">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Aviso de Privacidad</h2>
+                <button class="btn-cerrar-modal" onclick="cerrarModal('modal-privacidad')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>En cumplimiento estricto con la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong>.</p>
+                <h3>1. Datos Personales Recabados</h3>
+                <p>Para procesar su participación, recolectamos:</p>
+                <ul>
+                    <li><strong>Nombre Completo:</strong> Para asignar la titularidad de los boletos.</li>
+                    <li><strong>WhatsApp:</strong> Canal para confirmación de apartados y contacto.</li>
+                    <li><strong>Comprobantes de pago:</strong> Exclusivamente para validación contable.</li>
+                </ul>
+                <h3>2. Finalidades del Tratamiento</h3>
+                <p>Sus datos se utilizan para validar transacciones, prevenir fraudes, generar folios únicos en la base de datos y contactarle en caso de resultar ganador.</p>
+                <h3>3. Derechos ARCO</h3>
+                <p>Usted tiene derecho al Acceso, Rectificación, Cancelación u Oposición de sus datos. Envíe un mensaje a nuestro WhatsApp oficial para ejercerlos.</p>
+                <div class="tech-note-modal">
+                    <strong>Rol del Desarrollador:</strong> Antuan Lima actúa como Encargado del Tratamiento (Proveedor Tecnológico), administrando la infraestructura bajo los más altos estándares de seguridad, pero sin propiedad sobre los fondos.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var SUPABASE_URL = 'https://qcsfarqacgsqaddflfzb.supabase.co'; 
+        var SUPABASE_KEY = 'sb_publishable_Jwxr_1dKydjOgFedjvm50A_oHdLAwil'; 
+
+        var TOTAL_BOLETOS = 100000;
+        var BOLETOS_POR_PAGINA = 100;
+        var PRECIO = 1;
+        var MINUTOS_EXPIRACION = 1440; // 24 HORAS
+
+        var paginaActual = 1;
+        var seleccionados = [];
+        var boletosOcupados = []; 
+        var supabaseCliente = null;
+
+        // --- ACORDEÓN PREGUNTAS FRECUENTES ---
+        function toggleFaq(btn) {
+            btn.classList.toggle("activo");
+            var content = btn.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+
+        // --- FUNCIONES PARA LAS VENTANAS FLOTANTES (MODALES) ---
+        function abrirModal(idModal) {
+            document.getElementById(idModal).classList.add('activo');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function cerrarModal(idModal) {
+            document.getElementById(idModal).classList.remove('activo');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.classList.remove('activo');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function cerrarMensajeWA() {
+            var mensaje = document.getElementById('wa-mensaje');
+            if(mensaje) mensaje.classList.add('oculto');
+        }
+        setTimeout(cerrarMensajeWA, 8000);
+
+        async function cargarConfiguracion() {
+            try {
+                if (typeof window.supabase === 'undefined') return;
+                supabaseCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                var { data } = await supabaseCliente.from('configuracion').select('fecha, imagen').eq('id', 1).single();
+                if (data) {
+                    document.getElementById('fecha-sorteo-display').innerHTML = '<i class="far fa-calendar-alt"></i> Sorteo: ' + data.fecha;
+                    if (data.imagen) {
+                        document.getElementById('img-premio-display').src = data.imagen;
+                    }
+                }
+            } catch(e) { console.log("No se pudo cargar la configuración"); }
+        }
+
+        function renderizarPagina() {
+            var contenedor = document.getElementById('contenedor-boletos');
+            if (!contenedor) return;
+            
+            var htmlFinal = "";
+            var start = (paginaActual - 1) * BOLETOS_POR_PAGINA + 1;
+            var end = Math.min(paginaActual * BOLETOS_POR_PAGINA, TOTAL_BOLETOS);
+
+            for (var i = start; i <= end; i++) {
+                var numCeros = ("000000" + i).slice(-6);
+                var claseExtra = "";
+
+                if (boletosOcupados.indexOf(i) !== -1) {
+                    claseExtra = "ocupado";
+                } else if (seleccionados.indexOf(i) !== -1) {
+                    claseExtra = "seleccionado";
+                }
+
+                htmlFinal += '<div class="boleto ' + claseExtra + '" onclick="toggleSeleccion(' + i + ', this)">' + numCeros + '</div>';
+            }
+            
+            contenedor.innerHTML = htmlFinal;
+            
+            var totalPags = Math.ceil(TOTAL_BOLETOS / BOLETOS_POR_PAGINA);
+            document.getElementById('texto-pagina').textContent = 'Página ' + paginaActual + ' de ' + totalPags;
+            document.getElementById('btn-ant').disabled = (paginaActual === 1);
+            document.getElementById('btn-ant-full').disabled = (paginaActual === 1);
+            document.getElementById('btn-sig').disabled = (paginaActual === totalPags);
+            document.getElementById('btn-sig-full').disabled = (paginaActual === totalPags);
+        }
+
+        window.onload = function() {
+            cargarConfiguracion(); 
+            renderizarPagina();
+            conectarBaseDeDatos();
+        };
+
+        function irAlBoleto() {
+            var inputNum = parseInt(document.getElementById('buscar-numero').value);
+            if (isNaN(inputNum) || inputNum < 1 || inputNum > TOTAL_BOLETOS) {
+                Swal.fire('Ups', 'Ingresa un número entre 1 y 100,000', 'warning');
+                return;
+            }
+            paginaActual = Math.ceil(inputNum / BOLETOS_POR_PAGINA);
+            renderizarPagina();
+            document.querySelector('.paginacion').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('buscar-numero').value = '';
+        }
+
+        function cambiarPaginaExtrema(dir) {
+            var total = Math.ceil(TOTAL_BOLETOS / BOLETOS_POR_PAGINA);
+            if (dir === -1) paginaActual = 1;
+            if (dir === 1) paginaActual = total;
+            renderizarPagina();
+        }
+
+        function cambiarPagina(dir) {
+            var total = Math.ceil(TOTAL_BOLETOS / BOLETOS_POR_PAGINA);
+            if (dir === -1 && paginaActual > 1) paginaActual--;
+            if (dir === 1 && paginaActual < total) paginaActual++;
+            renderizarPagina();
+            document.querySelector('.area-compra').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleSeleccion(numero, elemento) {
+            if (boletosOcupados.indexOf(numero) !== -1) return; 
+            var indice = seleccionados.indexOf(numero);
+            if (indice !== -1) {
+                seleccionados.splice(indice, 1);
+                elemento.classList.remove('seleccionado');
+            } else {
+                seleccionados.push(numero);
+                elemento.classList.add('seleccionado');
+            }
+            actualizarBarraPago();
+        }
+
+        function actualizarBarraPago() {
+            var barra = document.getElementById('barra-pago');
+            var txtTotal = document.getElementById('total');
+            var waFlotante = document.getElementById('whatsapp-flotante'); 
+            
+            if (seleccionados.length > 0) {
+                barra.classList.add('activo');
+                txtTotal.textContent = seleccionados.length * PRECIO;
+                if(waFlotante) waFlotante.style.bottom = '100px';
+            } else {
+                barra.classList.remove('activo');
+                if(waFlotante) waFlotante.style.bottom = ''; 
+            }
+        }
+
+        function seleccionarAlAzar() {
+            var cantidad = parseInt(document.getElementById('cantidad-azar').value);
+            if (isNaN(cantidad) || cantidad < 1) return;
+            var intentos = 0;
+            var nuevosSeleccionados = [];
+            Swal.fire({ title: 'Buscando tu suerte...', didOpen: () => { Swal.showLoading() } });
+
+            while (nuevosSeleccionados.length < cantidad && intentos < 200000) {
+                var numAleatorio = Math.floor(Math.random() * TOTAL_BOLETOS) + 1;
+                if (boletosOcupados.indexOf(numAleatorio) === -1 && seleccionados.indexOf(numAleatorio) === -1 && nuevosSeleccionados.indexOf(numAleatorio) === -1) {
+                    nuevosSeleccionados.push(numAleatorio);
+                }
+                intentos++;
+            }
+
+            if (nuevosSeleccionados.length < cantidad) {
+                Swal.fire('Lo sentimos', 'Casi no quedan boletos disponibles', 'info');
+                return;
+            }
+
+            seleccionados = seleccionados.concat(nuevosSeleccionados);
+            paginaActual = Math.ceil(nuevosSeleccionados[0] / BOLETOS_POR_PAGINA);
+            renderizarPagina();
+            actualizarBarraPago();
+            Swal.fire({ icon: 'success', title: '¡Suerte!', text: 'Se agregaron ' + cantidad + ' boletos.', timer: 1500, showConfirmButton: false });
+        }
+
+        async function conectarBaseDeDatos() {
+            try {
+                if (typeof window.supabase === 'undefined') return;
+                if (!supabaseCliente) {
+                    supabaseCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                }
+                var { data, error } = await supabaseCliente.from('boletos').select('numero_boleto, estado, created_at');
+                
+                if (data && data.length > 0) {
+                    var ahora = new Date();
+                    boletosOcupados = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var b = data[i];
+                        if (b.estado === 'vendido') {
+                            boletosOcupados.push(b.numero_boleto);
+                        } else if (b.estado === 'apartado') {
+                            if (b.created_at) {
+                                var fechaCreacion = new Date(b.created_at);
+                                var minsPasados = (ahora - fechaCreacion) / (1000 * 60);
+                                if (minsPasados < MINUTOS_EXPIRACION) {
+                                    boletosOcupados.push(b.numero_boleto);
+                                }
+                            } else {
+                                boletosOcupados.push(b.numero_boleto);
+                            }
+                        }
+                    }
+                    renderizarPagina(); 
+                }
+            } catch(e) {
+                console.log("Error silencioso de BD");
+            }
+        }
+
+        async function irAPagar() {
+            if (seleccionados.length === 0) return;
+
+            // NUEVA INSTRUCCIÓN: Ocultar barra de pago y bajar whatsapp antes de abrir el modal
+            document.getElementById('barra-pago').classList.remove('activo');
+            var waFlotante = document.getElementById('whatsapp-flotante');
+            if(waFlotante) waFlotante.style.bottom = '';
+
+            var result = await Swal.fire({
+                title: 'Tus Datos para el Sorteo',
+                html:
+                    '<input id="swal-nombre" class="swal2-input" placeholder="Tu Nombre Completo">' +
+                    '<input id="swal-tel" type="tel" class="swal2-input" placeholder="Tu WhatsApp (10 dígitos)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, \'\'); window.validarTelefonos();">' +
+                    '<input id="swal-tel-conf" type="tel" class="swal2-input" placeholder="Confirma tu WhatsApp" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, \'\'); window.validarTelefonos();">' +
+                    '<div id="mensaje-validacion" style="margin-top: 15px; font-weight: bold; font-size: 0.95rem; height: 20px;"></div>',
+                focusConfirm: false,
+                confirmButtonText: 'Continuar al Pago',
+                confirmButtonColor: '#c5a028',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                didOpen: () => {
+                    window.validarTelefonos = function() {
+                        var t1 = document.getElementById('swal-tel').value;
+                        var t2 = document.getElementById('swal-tel-conf').value;
+                        var msgDiv = document.getElementById('mensaje-validacion');
+                        
+                        if (t1.length > 0 || t2.length > 0) {
+                            if (t1.length !== 10 && t1.length > 0) {
+                                msgDiv.style.color = '#e74c3c';
+                                msgDiv.innerHTML = 'Faltan dígitos (deben ser 10)';
+                            } else if (t1 !== t2 && t2.length > 0) {
+                                msgDiv.style.color = '#e74c3c';
+                                msgDiv.innerHTML = '<i class="fas fa-times-circle"></i> Los números NO coinciden';
+                            } else if (t1 === t2 && t1.length === 10) {
+                                msgDiv.style.color = '#2ecc71';
+                                msgDiv.innerHTML = '<i class="fas fa-check-circle"></i> ¡Números idénticos!';
+                            } else {
+                                msgDiv.innerHTML = '';
+                            }
+                        } else {
+                            msgDiv.innerHTML = '';
+                        }
+                    }
+                },
+                preConfirm: function() {
+                    var nombre = document.getElementById('swal-nombre').value.trim();
+                    var tel = document.getElementById('swal-tel').value.trim();
+                    var telConf = document.getElementById('swal-tel-conf').value.trim();
+
+                    if (!nombre) {
+                        Swal.showValidationMessage('Por favor ingresa tu nombre');
+                        return false;
+                    }
+                    if (!tel || !telConf) {
+                        Swal.showValidationMessage('Por favor llena ambos campos de WhatsApp');
+                        return false;
+                    }
+                    if (tel.length !== 10) {
+                        Swal.showValidationMessage('El número debe tener exactamente 10 dígitos');
+                        return false;
+                    }
+                    if (tel !== telConf) {
+                        Swal.showValidationMessage('Los números de WhatsApp no coinciden');
+                        return false;
+                    }
+
+                    return { nombre: nombre, telefono: tel };
+                }
+            });
+
+            if (result.isConfirmed) {
+                var btn = document.getElementById('btnPagar');
+                btn.textContent = "Procesando...";
+                btn.disabled = true;
+                try {
+                    if (supabaseCliente) {
+                        var inserts = [];
+                        for (var i = 0; i < seleccionados.length; i++) {
+                            inserts.push({
+                                numero_boleto: seleccionados[i],
+                                estado: 'apartado',
+                                comprador_nombre: result.value.nombre,
+                                comprador_telefono: result.value.telefono
+                            });
+                        }
+                        await supabaseCliente.from('boletos').upsert(inserts, { onConflict: 'numero_boleto' });
+                    }
+                } catch(e) { console.log(e); }
+                window.location.href = 'checkout.html?boletos=' + seleccionados.join(',');
+            } else {
+                // NUEVA INSTRUCCIÓN: Si el cliente canceló o cerró la ventana, volvemos a mostrar la barra de pago
+                actualizarBarraPago();
+            }
+        }
+
+        async function verificarBoleto() {
+            var resultado = await Swal.fire({
+                title: 'Verificar Boleto',
+                input: 'text',
+                inputLabel: 'Ingresa tu Folio (ej. VOL-XXXXXX)',
+                inputPlaceholder: 'Escribe tu folio aquí...',
+                showCancelButton: true,
+                confirmButtonColor: '#c5a028',
+                confirmButtonText: 'Verificar'
+            });
+
+            if (resultado.value && supabaseCliente) {
+                Swal.showLoading();
+                var folioLimpio = resultado.value.trim().toUpperCase();
+                var { data } = await supabaseCliente
+                    .from('boletos')
+                    .select('numero_boleto, comprador_nombre, estado')
+                    .eq('folio', folioLimpio)
+                    .eq('estado', 'vendido');
+
+                if (data && data.length > 0) {
+                    var numerosArr = data.map(function(b) { 
+                        return ("000000" + b.numero_boleto).slice(-6); 
+                    }).join(', ');
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Boleto Original! ✅',
+                        html: '<b>Comprador:</b> ' + data[0].comprador_nombre + '<br><b>Boletos:</b> ' + numerosArr + '<br><br><span style="color:green;">Válido para el sorteo</span>'
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Folio Inválido ❌', text: 'No encontramos este folio o el pago no está completado.' });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
