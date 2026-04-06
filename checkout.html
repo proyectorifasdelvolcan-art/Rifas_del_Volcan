@@ -26,7 +26,6 @@
         .fila-resumen { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 1.1rem; }
         .total { font-size: 1.5rem; font-weight: 900; color: var(--dorado-solido); border-top: 2px dashed #ddd; padding-top: 15px; margin-top: 10px; }
 
-        /* --- ESTILOS DE LA TARJETA SPIN BY OXXO MULTIDATO --- */
         .tarjeta-spin {
             background: linear-gradient(135deg, #612C7D 0%, #8E44AD 100%);
             color: white; border-radius: 16px; padding: 25px; position: relative;
@@ -48,7 +47,6 @@
         .card-chip { z-index: 1; margin-bottom: 15px; }
         .card-chip i { font-size: 2.2rem; color: #d4af37; opacity: 0.9; }
         
-        /* Contenedor de los datos para alinearlos con su botón de copiar */
         .dato-row { display: flex; justify-content: space-between; align-items: center; z-index: 1; margin-bottom: 15px; background: rgba(0,0,0,0.15); padding: 10px 15px; border-radius: 10px; backdrop-filter: blur(5px); }
         .dato-info { display: flex; flex-direction: column; }
         
@@ -60,7 +58,6 @@
 
         .card-name { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; z-index: 1; opacity: 0.9; margin-top: 5px; }
 
-        /* Botón WhatsApp */
         .btn-whatsapp { background: var(--verde-whats); color: white; border: none; padding: 18px; width: 100%; border-radius: 50px; font-weight: 800; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); text-decoration: none; }
         .btn-whatsapp:hover { transform: scale(1.02); }
         .btn-cancelar { background: transparent; border: none; color: #888; font-weight: 600; text-decoration: underline; margin-top: 25px; cursor: pointer; display: inline-block; }
@@ -135,7 +132,7 @@
     </div>
 
     <script>
-        var PRECIO = 1; 
+        var PRECIO = 0.5; 
         var NUMERO_WHATSAPP = "522216324043"; 
 
         function obtenerBoletosDeURL() {
@@ -148,18 +145,18 @@
             }
             
             var boletosArray = boletosString.split(',');
-            var formateados = boletosArray.map(function(b) { return ("000000" + b).slice(-6); }).join(', ');
+            // FORMATO ACTUALIZADO A 5 DÍGITOS
+            var formateados = boletosArray.map(function(b) { return ("00000" + b).slice(-5); }).join(', ');
             var total = boletosArray.length * PRECIO;
 
             document.getElementById('txt-boletos').textContent = formateados;
-            document.getElementById('txt-total').textContent = "$" + total + ".00 MXN";
+            document.getElementById('txt-total').textContent = "$" + total.toFixed(2) + " MXN";
 
-            var mensaje = "Hola! Acabo de apartar los boletos: *" + formateados + "*. \nMi total a pagar es de: *$" + total + " MXN*. \n\nAquí te envío mi comprobante de pago: 📸";
+            var mensaje = "Hola! Acabo de apartar los boletos: *" + formateados + "*. \nMi total a pagar es de: *$" + total.toFixed(2) + " MXN*. \n\nAquí te envío mi comprobante de pago: 📸";
             var urlWhatsapp = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(mensaje);
             document.getElementById('enlace-whatsapp').href = urlWhatsapp;
         }
 
-        // Función modificada para mostrar si se copió la Tarjeta o la CLABE
         function copiarTexto(id, tipo) {
             var texto = document.getElementById(id).innerText;
             var textoLimpio = texto.replace(/\s+/g, ''); 
@@ -178,5 +175,4 @@
         obtenerBoletosDeURL();
     </script>
 </body>
-
 </html>
