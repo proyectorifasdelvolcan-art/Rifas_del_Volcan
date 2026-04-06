@@ -22,7 +22,6 @@
         .btn-nav { background: transparent; border: 2px solid var(--dorado-solido); padding: 8px 15px; border-radius: 20px; font-weight: 700; color: var(--dorado-solido); cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
         .btn-nav:hover { background: var(--dorado-solido); color: var(--negro-suave); }
 
-        /* PORTADA MEJORADA (HERO DARK) */
         .hero { text-align: center; padding: 50px 20px 60px 20px; background: linear-gradient(135deg, #111 0%, #222 100%); color: white; border-bottom: 5px solid var(--dorado-solido); position: relative; overflow: hidden; }
         .hero::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); opacity: 0.1; pointer-events: none; }
         .hero h1 { font-size: 3.5rem; margin: 0; line-height: 1.1; text-transform: uppercase; position: relative; z-index: 1; }
@@ -36,7 +35,6 @@
         .btn-facebook { background-color: var(--azul-facebook); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; margin-top: 25px; box-shadow: 0 5px 15px rgba(24, 119, 242, 0.3); transition: transform 0.3s; position: relative; z-index: 1; }
         .btn-facebook:hover { transform: translateY(-3px); }
 
-        /* CINTILLO DE CONFIANZA */
         .trust-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 25px 5%; background: var(--blanco); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-bottom: 1px solid #eee; margin-bottom: 30px; }
         .badge { display: flex; align-items: center; gap: 10px; color: #555; font-weight: 700; font-size: 0.95rem; }
         .badge i { font-size: 1.5rem; color: var(--dorado-solido); }
@@ -61,7 +59,6 @@
         .boleto.seleccionado { background: var(--dorado-brillo); color: var(--negro-suave); border-color: transparent; font-weight: 900; transform: scale(1.08); box-shadow: 0 5px 15px rgba(197, 160, 40, 0.3); }
         .boleto.ocupado { background-color: #e0e0e0; color: #a0a0a0; border-color: #e0e0e0; cursor: not-allowed; text-decoration: line-through; opacity: 0.7; pointer-events: none; }
 
-        /* SECCIÓN FAQ (PREGUNTAS FRECUENTES) */
         .faq-section { max-width: 700px; margin: 0 auto 60px auto; text-align: left; padding: 0 20px; }
         .faq-section h2 { text-align: center; font-size: 2rem; margin-bottom: 30px; color: var(--negro-suave); }
         .faq-item { margin-bottom: 15px; border: 1px solid #eee; border-radius: 12px; background: white; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
@@ -86,7 +83,6 @@
         .link-creador { color: var(--dorado-solido); text-decoration: none; font-weight: 900; transition: all 0.3s ease; }
         .link-creador:hover { text-decoration: underline; opacity: 1; color: #fff; }
 
-        /* BURBUJA DE WHATSAPP */
         .whatsapp-flotante { position: fixed; bottom: 25px; right: 25px; z-index: 3000; display: flex; flex-direction: column; align-items: flex-end; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .wa-mensaje { background: white; color: var(--negro-suave); padding: 12px 15px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 15px; position: relative; opacity: 1; transition: opacity 0.5s ease, transform 0.5s ease; border: 1px solid #eee; border-left: 4px solid var(--verde-whatsapp); display: flex; align-items: center; gap: 10px; }
         .wa-mensaje.oculto { opacity: 0; transform: translateY(20px); pointer-events: none; }
@@ -95,7 +91,6 @@
         .wa-boton { background-color: var(--verde-whatsapp); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 38px; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); text-decoration: none; transition: transform 0.3s; border: 2px solid white; }
         .wa-boton:hover { transform: scale(1.1); color: white; }
 
-        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 5000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; backdrop-filter: blur(5px); }
         .modal-overlay.activo { opacity: 1; pointer-events: auto; }
         .modal-content { background: var(--blanco); width: 90%; max-width: 800px; max-height: 85vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 15px 50px rgba(0,0,0,0.5); transform: translateY(-30px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-top: 6px solid var(--dorado-solido); }
@@ -135,7 +130,7 @@
         
         <img id="img-premio-display" class="foto-premio" src="https://via.placeholder.com/500x250?text=Cargando+Imagen..." alt="Premio de la Rifa">
         
-        <div class="precio-pill">$1.00 MXN x Boleto</div><br>
+        <div class="precio-pill">$0.50 MXN x Boleto</div><br>
 
         <a href="https://www.facebook.com/profile.php?id=61588554851135" target="_blank" class="btn-facebook">
             <i class="fab fa-facebook-f"></i> Sigue la Rifa en VIVO
@@ -153,7 +148,7 @@
         <div class="random-panel">
             <h3 style="margin:0; font-size:1.2rem; color: var(--negro-suave);">¿Buscas un número en especial?</h3>
             <div class="random-controls" style="border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 20px;">
-                <input type="number" id="buscar-numero" placeholder="Ej. 85000" class="input-cantidad" style="width: 140px;">
+                <input type="number" id="buscar-numero" placeholder="Ej. 8500" class="input-cantidad" style="width: 140px;">
                 <button class="btn-suerte" style="background: var(--negro-suave); color: white;" onclick="irAlBoleto()"><i class="fas fa-search"></i> Buscar</button>
             </div>
             
@@ -184,7 +179,7 @@
         <div class="faq-item">
             <button class="faq-btn" onclick="toggleFaq(this)">¿Cómo se elige a los ganadores? <i class="fas fa-chevron-down"></i></button>
             <div class="faq-content">
-                <p>Todos nuestros sorteos se realizan con base en los resultados transmitidos en nuestra pagina de Facebook. El número ganador será aquel que coincida con las últimas cifras del Premio Mayor del sorteo en la fecha indicada.</p>
+                <p>Todos nuestros sorteos se realizan con base en los resultados oficiales de la Lotería Nacional de México. El número ganador será aquel que coincida con las últimas cifras del Premio Mayor del sorteo en la fecha indicada.</p>
             </div>
         </div>
 
@@ -214,7 +209,7 @@
     </div>
 
     <div class="panel-pago" id="barra-pago">
-        <button class="btn-ir-pagar" id="btnPagar" onclick="irAPagar()">Apartar y Pagar $<span id="total">0</span></button>
+        <button class="btn-ir-pagar" id="btnPagar" onclick="irAPagar()">Apartar y Pagar $<span id="total">0.00</span></button>
     </div>
 
     <footer>
@@ -225,7 +220,7 @@
             <a onclick="abrirModal('modal-privacidad')">Aviso de Privacidad</a>
         </div>
         <div class="creditos">
-            Creado y Diseñado por <a href="https://www.instagram.com/1adgl2?igsh=MXNtbTlqNTd5Y2I3cQ%3D%3D&utm_source=qr" target="_blank" class="link-creador">Antuan Lima</a>
+            Creado y Diseñado por <a href="TU_ENLACE_DE_INSTAGRAM_AQUI" target="_blank" class="link-creador">Antuan Lima</a>
         </div>
     </footer>
 
@@ -240,7 +235,7 @@
                 <h3>1. Descripción de la Dinámica</h3>
                 <p>Los sorteos realizados a través de este portal son organizados por iniciativa privada y tienen como base los resultados oficiales de la <strong>Lotería Nacional de México</strong>.</p>
                 <h3>2. Valor y Modalidad de Pago</h3>
-                <p>Cada boleto tiene un costo de <strong>$1.00 MXN</strong>. El pago se realiza mediante transferencia bancaria o depósito a las cuentas oficiales mostradas al finalizar el apartado.</p>
+                <p>Cada boleto tiene un costo de <strong>$0.50 MXN</strong>. El pago se realiza mediante transferencia bancaria o depósito a las cuentas oficiales mostradas al finalizar el apartado.</p>
                 <h3>3. Regla Estricta de Apartado (24 Horas)</h3>
                 <p>El sistema otorga un periodo de reserva de <strong>24 horas exactas</strong>. Si el comprobante de pago no es enviado vía WhatsApp en este lapso, los números se liberarán.</p>
                 <h3>4. Validación de Folios</h3>
@@ -284,17 +279,16 @@
         var SUPABASE_URL = 'https://qcsfarqacgsqaddflfzb.supabase.co'; 
         var SUPABASE_KEY = 'sb_publishable_Jwxr_1dKydjOgFedjvm50A_oHdLAwil'; 
 
-        var TOTAL_BOLETOS = 100000;
+        var TOTAL_BOLETOS = 10000;
         var BOLETOS_POR_PAGINA = 100;
-        var PRECIO = 1;
-        var MINUTOS_EXPIRACION = 1440; // 24 HORAS
+        var PRECIO = 0.5;
+        var MINUTOS_EXPIRACION = 1440; 
 
         var paginaActual = 1;
         var seleccionados = [];
         var boletosOcupados = []; 
         var supabaseCliente = null;
 
-        // --- ACORDEÓN PREGUNTAS FRECUENTES ---
         function toggleFaq(btn) {
             btn.classList.toggle("activo");
             var content = btn.nextElementSibling;
@@ -305,7 +299,6 @@
             }
         }
 
-        // --- FUNCIONES PARA LAS VENTANAS FLOTANTES (MODALES) ---
         function abrirModal(idModal) {
             document.getElementById(idModal).classList.add('activo');
             document.body.style.overflow = 'hidden'; 
@@ -352,7 +345,7 @@
             var end = Math.min(paginaActual * BOLETOS_POR_PAGINA, TOTAL_BOLETOS);
 
             for (var i = start; i <= end; i++) {
-                var numCeros = ("000000" + i).slice(-6);
+                var numCeros = ("00000" + i).slice(-5);
                 var claseExtra = "";
 
                 if (boletosOcupados.indexOf(i) !== -1) {
@@ -383,7 +376,7 @@
         function irAlBoleto() {
             var inputNum = parseInt(document.getElementById('buscar-numero').value);
             if (isNaN(inputNum) || inputNum < 1 || inputNum > TOTAL_BOLETOS) {
-                Swal.fire('Ups', 'Ingresa un número entre 1 y 100,000', 'warning');
+                Swal.fire('Ups', 'Ingresa un número entre 1 y 10,000', 'warning');
                 return;
             }
             paginaActual = Math.ceil(inputNum / BOLETOS_POR_PAGINA);
@@ -427,7 +420,7 @@
             
             if (seleccionados.length > 0) {
                 barra.classList.add('activo');
-                txtTotal.textContent = seleccionados.length * PRECIO;
+                txtTotal.textContent = (seleccionados.length * PRECIO).toFixed(2);
                 if(waFlotante) waFlotante.style.bottom = '100px';
             } else {
                 barra.classList.remove('activo');
@@ -468,7 +461,8 @@
                 if (!supabaseCliente) {
                     supabaseCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 }
-                var { data, error } = await supabaseCliente.from('boletos').select('numero_boleto, estado, created_at');
+                // ¡AQUÍ ESTÁ LA SOLUCIÓN DEL LÍMITE: .limit(10000)!
+                var { data, error } = await supabaseCliente.from('boletos').select('numero_boleto, estado, created_at').limit(10000);
                 
                 if (data && data.length > 0) {
                     var ahora = new Date();
@@ -499,7 +493,6 @@
         async function irAPagar() {
             if (seleccionados.length === 0) return;
 
-            // NUEVA INSTRUCCIÓN: Ocultar barra de pago y bajar whatsapp antes de abrir el modal
             document.getElementById('barra-pago').classList.remove('activo');
             var waFlotante = document.getElementById('whatsapp-flotante');
             if(waFlotante) waFlotante.style.bottom = '';
@@ -586,48 +579,55 @@
                 } catch(e) { console.log(e); }
                 window.location.href = 'checkout.html?boletos=' + seleccionados.join(',');
             } else {
-                // NUEVA INSTRUCCIÓN: Si el cliente canceló o cerró la ventana, volvemos a mostrar la barra de pago
                 actualizarBarraPago();
             }
         }
 
         async function verificarBoleto() {
             var resultado = await Swal.fire({
-                title: 'Verificar Boleto',
+                title: 'Verificar Compra',
                 input: 'text',
-                inputLabel: 'Ingresa tu Folio (ej. VOL-XXXXXX)',
-                inputPlaceholder: 'Escribe tu folio aquí...',
+                inputLabel: 'Ingresa tu Folio (ej. VOL-XXXX) o Número de Boleto',
+                inputPlaceholder: 'Folio o Número...',
                 showCancelButton: true,
                 confirmButtonColor: '#c5a028',
-                confirmButtonText: 'Verificar'
+                confirmButtonText: 'Buscar'
             });
 
             if (resultado.value && supabaseCliente) {
                 Swal.showLoading();
-                var folioLimpio = resultado.value.trim().toUpperCase();
-                var { data } = await supabaseCliente
+                var inputLimpio = resultado.value.trim().toUpperCase();
+                
+                var esNumero = !isNaN(inputLimpio) && inputLimpio !== '';
+                
+                var query = supabaseCliente
                     .from('boletos')
-                    .select('numero_boleto, comprador_nombre, estado')
-                    .eq('folio', folioLimpio)
-                    .eq('estado', 'vendido');
+                    .select('numero_boleto, comprador_nombre, estado, folio')
+                    .eq('estado', 'vendido'); 
+
+                if (esNumero) {
+                    query = query.eq('numero_boleto', parseInt(inputLimpio));
+                } else {
+                    query = query.eq('folio', inputLimpio);
+                }
+
+                var { data } = await query;
 
                 if (data && data.length > 0) {
                     var numerosArr = data.map(function(b) { 
-                        return ("000000" + b.numero_boleto).slice(-6); 
+                        return ("00000" + b.numero_boleto).slice(-5); 
                     }).join(', ');
                     
                     Swal.fire({
                         icon: 'success',
-                        title: '¡Boleto Original! ✅',
-                        html: '<b>Comprador:</b> ' + data[0].comprador_nombre + '<br><b>Boletos:</b> ' + numerosArr + '<br><br><span style="color:green;">Válido para el sorteo</span>'
+                        title: '¡Compra Localizada! ✅',
+                        html: '<b>Comprador:</b> ' + data[0].comprador_nombre + '<br><b>Folio:</b> ' + (data[0].folio || 'N/A') + '<br><b>Boletos:</b> ' + numerosArr + '<br><br><span style="color:green;">Válido para el sorteo</span>'
                     });
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Folio Inválido ❌', text: 'No encontramos este folio o el pago no está completado.' });
+                    Swal.fire({ icon: 'error', title: 'No Encontrado ❌', text: 'No encontramos este folio/número o tu pago aún no ha sido aprobado por el administrador.' });
                 }
             }
         }
     </script>
 </body>
-
 </html>
-
